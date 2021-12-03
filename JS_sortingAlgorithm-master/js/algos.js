@@ -5,8 +5,7 @@ Number.prototype.toRadians = function() {
 
 
 // Calculates the distance between Grenoble and the given city
-function distanceFromGrenoble(city)
-{
+function distanceFromGrenoble(city) {
   console.log(city);
   var GrenobleLat = 45.166667;
   var GrenobleLong = 5.716667;
@@ -28,8 +27,7 @@ function distanceFromGrenoble(city)
 // Swap 2 values in array csvData
 // i is the index of the first city
 // j is the index of the second city
-function swap(i,j)
-{
+function swap(i,j) {
   displayBuffer.push(['swap', i, j]); // Do not delete this line (for display)
   let temp = csvData[i];
   csvData[i] = csvData[j];
@@ -40,30 +38,21 @@ function swap(i,j)
 // Returns true if city with index i in csvData is closer to Grenoble than city with index j
 // i is the index of the first city
 // j is the index of the second city
-function isLess(i, j)
-{
+function isLess(i, j) {
   displayBuffer.push(['compare', i, j]); // Do not delete this line (for display)
   return csvData[i].dist < csvData[j].dist;
 }
 
 
-function insertsort()
-{
-  // for(let i = 1; i < csvData.length; i++) {
-  //   let j = i - 1;
-  //   let temp = csvData[i];
-  //
-  //   while (j >= 0 && csvData[j].dist > temp.dist) {
-  //     csvData[j + 1] = csvData[j];
-  //     j--;
-  //   }
-  //   csvData[j + 1] = temp;
-  // }
-  // return csvData;
+function insertsort() {
+  for (let i = 1; i <= csvData.length; i++) {
+    for (let j = i - 1; j > 0 && isLess(j, j-1); j--) {
+      swap(j, j-1)
+    }
+  }
 }
 
-function selectionsort()
-{
+function selectionsort() {
   for (let i = 0; i < csvData.length; i++) {
     for (let j = i + 1; j < csvData.length; j++) {
       if (isLess(j, i)) {
@@ -74,8 +63,7 @@ function selectionsort()
   return csvData;
 }
 
-function bubblesort()
-{
+function bubblesort() {
   let swapped;
   let count = 0;
   do {
@@ -92,19 +80,64 @@ function bubblesort()
 
 }
 
-function shellsort()
-{
-  console.log("shellsort - implement me !");
+function shellsort() {
+  // for (let i = csvData.length / 2 ; i < csvData.length; i++) {
+  //
+  // }
 }
 
-function mergesort()
-{
-  console.log("mergesort - implement me !");
+function mergesort() {
+  let tempArray = JSON.parse(JSON.stringify(csvData))
+  merge(tempArray)
+
+  for (let i = 0; i < csvData.length; i++) {
+    let index = csvData.findIndex(element => element.nom_commune === tempArray[i].nom_commune)
+    swap(index, i)
+  }
+}
+
+function merge(array) {
+  if (array.length > 1) {
+    const cutInHalf = Math.floor(array.length / 2);
+    const left = array.slice(0, cutInHalf);
+    const right = array.slice(cutInHalf, array.length);
+
+    merge(left);
+    merge(right);
+
+    let leftI = 0;
+    let rightI = 0;
+    let index = 0;
+    while (leftI < left.length && rightI < right.length) {
+      if(isLess(csvData.findIndex(element => element.nom_commune === left[leftI].nom_commune),
+                csvData.findIndex(element => element.nom_commune === right[rightI].nom_commune))) {
+        array[index] = left[leftI];
+        leftI ++;
+      } else {
+        array[index] = right[rightI];
+        rightI ++;
+      }
+      index ++;
+    }
+
+    while(leftI < left.length) {
+      array[index] = left[leftI];
+      leftI ++;
+      index ++;
+    }
+
+    while(rightI < right.length) {
+      array[index] = right[rightI];
+      rightI ++;
+      index ++;
+    }
+  }
+  return array;
 }
 
 function heapsort()
 {
-  console.log("heapsort - implement me !");
+
 }
 
 function quicksort()
